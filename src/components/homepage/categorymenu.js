@@ -1,17 +1,17 @@
 
 import React from "react";
 
-const CategoryList = ({ categories, onSelect }) => {
+const CategoryMenu = ({ categories }) => {
   return (
-    <aside className="category-list">
-      <h3>Categories</h3>
-      <ul>
-        {categories.map((c) => (
-          <li key={c.id} onClick={() => onSelect && onSelect(c.id)}>{c.name}</li>
+    <ul className="category-menu">
+      {categories &&
+        categories.map((cat) => (
+          <li key={cat.id} className="category-item">
+            {cat.name}
+          </li>
         ))}
-      </ul>
-    </aside>
+    </ul>
   );
 };
 
-export default CategoryList;
+export default CategoryMenu;

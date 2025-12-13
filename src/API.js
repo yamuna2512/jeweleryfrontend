@@ -1,28 +1,31 @@
+// src/API.js
 import axios from "axios";
 require("dotenv").config();
 
-export const LOGIN_USER_KEY = "JEWELLERY_LOGIN_USER";
+export const LOGIN_USER_KEY = "JEWEL_STORE_USER";
 
-// ===== BASE URL =====
-let baseURL;
-baseURL = "http://127.0.0.1:8000"; // your Django backend
+// Your backend base URL
+let baseURL = "http://127.0.0.1:8000/api"; // <-- update if deployed later
 
-// ===== AXIOS INSTANCE =====
+// AXIOS INSTANCE
 const api = axios.create({
   baseURL: baseURL,
-  headers: { "Content-Type": "application/json" },
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// ===== REQUEST INTERCEPTOR =====
+// REQUEST INTERCEPTOR → inject token automatically
 api.interceptors.request.use(
   (config) => {
     if (config.requireToken) {
-      const userData = localStorage.getItem(LOGIN_USER_KEY)
+      const user = localStorage.getItem(LOGIN_USER_KEY)
         ? JSON.parse(localStorage.getItem(LOGIN_USER_KEY))
         : null;
 
-      if (userData && userData.token) {
-        config.headers.common["Authorization"] = `Token ${userData.token}`;
+      if (user && user.token) {
+        // Your backend uses Token Auth => "Authorization: Token <token>"
+        config.headers.common["Authorization"] = `Token ${user.token}`;
       }
     }
     return config;
@@ -30,13 +33,13 @@ api.interceptors.request.use(
   (err) => console.error(err)
 );
 
-// ===== RESPONSE INTERCEPTOR =====
+// RESPONSE INTERCEPTOR
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {
-    console.error("API Error:", error);
+    console.log("API Error:", error);
 
-    if (error.response && error.response.status === 401) {
+    if (error?.response?.status === 401) {
       localStorage.removeItem(LOGIN_USER_KEY);
     }
 
@@ -44,77 +47,105 @@ api.interceptors.response.use(
   }
 );
 
-// ========== EXPORT API CLASS ==========
 export default class API {
-  // =================== AUTH ===================
 
-  signUp = async (body) => {
+  /* -----------------------------
+   *      USER AUTH
+   * ----------------------------*/
+
+  signUp = async (signUpBody) => {
     const formData = new FormData();
-    for (const key in body) formData.append(key, body[key]);
-    return api.post("/Users/signup/", formData);
+    for (const key in signUpBody) {
+      formData.append(key, signUpBody[key]);
+    }
+    return api.post("/users/signup/", formData);
   };
 
-  signIn = async (body) => {
+  signIn = async (signInBody) => {
     const formData = new FormData();
-    for (const key in body) formData.append(key, body[key]);
-    return api.post("/Users/signin/", formData);
+    for (const key in signInBody) {
+      formData.append(key, signInBody[key]);
+    }
+    return api.post("/users/signin/", formData);
   };
 
-  getProfile = () => {
-    return api.get("/Users/profile/", { requireToken: true });
+  getUserProfile = () => {
+    return api.get("/users/profile/", { requireToken: true });
   };
 
-  // =================== CATEGORIES ===================
+
+  /* -----------------------------
+   *      CATEGORY / SUBCATEGORY
+   * ----------------------------*/
 
   getCategories = () => {
     return api.get("/products/categories/");
   };
 
-  getSubCategories = (categoryId) => {
-    return api.get("/products/subcategories/", {
-      params: { category_id: categoryId },
+  getSubCategories = () => {
+    return api.get("/products/subcategories/");
+  };
+
+
+  /* -----------------------------
+   *      PRODUCTS
+   * ----------------------------*/
+
+  getProducts = (query = {}) => {
+    return api.get("/products/products/", {
+      params: query,
     });
   };
 
-  // =================== PRODUCTS ===================
-
-  getProducts = (query = {}) => {
-    return api.get("/products/products/", { params: query });
+  getProductDetail = (productId) => {
+    return api.get(`/products/products/${productId}/`);
   };
 
-  getProductDetail = (id) => {
-    return api.get(`/products/products/${id}/`);
-  };
 
-  // =================== CART ===================
+  /* -----------------------------
+   *      CART
+   * ----------------------------*/
 
-  getCart = () => {
-    return api.get("/products/cart/", { requireToken: true });
-  };
-
-  addToCart = (body) => {
-    const formData = new FormData();
-    for (const key in body) formData.append(key, body[key]);
-    return api.post("/products/cart/add/", formData, { requireToken: true });
-  };
-
-  removeCartItem = (id) => {
-    return api.delete(`/products/cart/remove/${id}/`, {
+  getCartItems = () => {
+    return api.get("/products/cart/", {
       requireToken: true,
     });
   };
 
-  // =================== WISHLIST ===================
+  addToCart = (body) => {
+    const formData = new FormData();
+    for (const key in body) {
+      formData.append(key, body[key]);
+    }
+    return api.post("/products/cart/add/", formData, {
+      requireToken: true,
+    });
+  };
+
+  removeCartItem = (cartItemId) => {
+    return api.delete(`/products/cart/remove/${cartItemId}/`, {
+      requireToken: true,
+    });
+  };
+
+
+  /* -----------------------------
+   *      WISHLIST
+   * ----------------------------*/
 
   getWishlist = () => {
-    return api.get("/products/wishlist/", { requireToken: true });
+    return api.get("/products/wishlist/", {
+      requireToken: true,
+    });
   };
 
-  addWishlist = (body) => {
+  addToWishlist = (body) => {
     const formData = new FormData();
-    for (const key in body) formData.append(key, body[key]);
-    return api.post("/products/wishlist/add/", formData, { requireToken: true });
+    for (const key in body) {
+      formData.append(key, body[key]);
+    }
+    return api.post("/products/wishlist/add/", formData, {
+      requireToken: true,
+    });
   };
-
-  
 }

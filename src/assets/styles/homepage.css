@@ -1,0 +1,147 @@
+/* ---------------- HOME PAGE WRAPPER ---------------- */
+.homepage {
+  width: 100%;
+  background: #ffffff;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ---------------- BANNER ---------------- */
+.banner-container {
+  width: 100%;
+  height: 330px;
+  overflow: hidden;
+  border-radius: 8px;
+  position: relative;
+}
+
+.banner-image {
+  width: 100%;
+  height: 330px;
+  object-fit: cover;
+}
+
+.banner-text {
+  position: absolute;
+  top: 30%;
+  right: 10%;
+  text-align: right;
+  color: white;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+/* ---------------- PAGE CONTENT ---------------- */
+.homepage-content {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  padding: 0 30px;
+}
+
+/* ---------------- CATEGORY MENU ---------------- */
+.homepage-left {
+  width: 20%;
+}
+
+.side-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.category-menu {
+  list-style: none;
+  padding: 0;
+}
+
+.category-item {
+  font-size: 16px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.category-item:hover {
+  color: #d4a017;
+}
+
+/* ---------------- PRODUCT LIST SECTION ---------------- */
+.homepage-right {
+  width: 78%;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* ---------------- PRODUCT GRID ---------------- */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.product-card {
+  padding: 15px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+}
+
+.product-img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+}
+
+.product-name {
+  margin-top: 10px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width: 992px) {
+  .homepage-content {
+    flex-direction: column;
+  }
+
+  .homepage-left {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .homepage-right {
+    width: 100%;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .banner-text {
+    font-size: 18px;
+    right: 5%;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .product-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
