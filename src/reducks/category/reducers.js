@@ -1,15 +1,19 @@
-// src/reducks/category/reducers.js
-import initialState from "../store/initialState";
-import * as Actions from "./actions";
+import { FETCH_CATEGORIES } from "./operations";
 
-export const CategoriesReducer = (state = initialState.categories, action) => {
-	switch (action.type) {
-		case Actions.FETCH_CATEGORIES:
-			return {
-				...state,
-				results: [...action.payload.categories],
-			};
-		default:
-			return state;
-	}
+const initialState = {
+  list: [],
 };
+
+const categoryReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case FETCH_CATEGORIES:
+      return {
+        ...state,
+        list: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+export default categoryReducer;

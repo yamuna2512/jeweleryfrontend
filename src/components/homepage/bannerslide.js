@@ -1,22 +1,18 @@
 
 import React from "react";
+import banner from "../../assets/images/banner.webp";
 import "../../assets/styles/homepage.css";
 
 const BannerSlide = () => {
   return (
-    <div className="banner-container">
-      <img
-        src="/assets/images/banner1.jpg"
-        alt="Jewellery Banner"
-        className="banner-image"
-      />
-
+    <div className="banner-slide">
+      <img src={banner} alt="Divine Jewels Banner" />
       <div className="banner-text">
-        <h2>Discover the Sparkle</h2>
-        <p>in You</p>
+        <h2>Discover the Sparkle in You</h2>
       </div>
     </div>
   );
 };
 
 export default BannerSlide;
+
