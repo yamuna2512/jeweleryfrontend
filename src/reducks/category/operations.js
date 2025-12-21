@@ -15,7 +15,7 @@ export const fetchCategories = () => {
   return async (dispatch) => {
     try {
       //  change URL to match your backend
-      const response = await axios.get("http://localhost:8000/api/categories/");
+      const response = await axios.get("http://localhost:8000/api/products/categories/");
       dispatch(fetchCategoriesAction(response.data));
     } catch (error) {
       console.error("Fetch categories failed", error);

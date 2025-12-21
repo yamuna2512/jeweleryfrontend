@@ -19,6 +19,7 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("SIGNUP CLICKED");
 
     dispatch(
       signUp(
@@ -29,6 +30,7 @@ const SignUp = () => {
           password: password,
         },
         () => {
+          console.log("SIGNUP SUCCESS");
           history.push("/"); // redirect after signup
         }
       )

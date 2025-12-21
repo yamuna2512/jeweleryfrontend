@@ -5,30 +5,6 @@
   font-family: "Poppins", sans-serif;
 }
 
-/* ---------------- BANNER ---------------- */
-.banner-container {
-  width: 100%;
-  height: 330px;
-  overflow: hidden;
-  border-radius: 8px;
-  position: relative;
-}
-
-.banner-image {
-  width: 100%;
-  height: 330px;
-  object-fit: cover;
-}
-
-.banner-text {
-  position: absolute;
-  top: 30%;
-  right: 10%;
-  text-align: right;
-  color: white;
-  font-size: 26px;
-  font-weight: 600;
-}
 
 /* ---------------- PAGE CONTENT ---------------- */
 .homepage-content {
@@ -43,71 +19,172 @@
   width: 20%;
 }
 
-.side-title {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 15px;
+.category-sidebar {
+  padding: 20px 10px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 }
 
-.category-menu {
+.side-title {
+  font-family: "Playfair Display", serif;
+  font-size: 18px;
+  margin-bottom: 18px;
+  color: #222;
+}
+
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-item {
+  font-size: 14px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  position: relative;
+  padding-left: 6px;
+  transition: all 0.3s ease;
+}
+
+/* Hover underline */
+.category-item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0%;
+  height: 2px;
+  background-color: #c59d5f;
+  transition: width 0.3s ease;
+}
+
+.category-item:hover {
+  color: #c59d5f;
+}
+
+.category-item:hover::after {
+  width: 100%;
+}
+
+/* Active category */
+.category-item.active {
+  font-weight: 600;
+  color: #c59d5f;
+}
+
+.category-item.active::after {
+  width: 100%;
+}
+
+/* Responsive for mobile */
+@media screen and (max-width: 768px) {
+  .category-sidebar {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  .category-item {
+    font-size: 13px;
+  }
+}
+
+
+/* CATEGORY SIDEBAR */
+.side-title {
+  font-family: "Playfair Display", serif;
+  font-size: 18px;
+  margin-bottom: 18px;
+}
+
+.category-list {
   list-style: none;
   padding: 0;
 }
 
 .category-item {
-  font-size: 16px;
-  margin-bottom: 8px;
+  font-size: 14px;
+  margin-bottom: 12px;
   cursor: pointer;
-  transition: 0.3s ease;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.category-item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background-color: #c59d5f;
+  transition: width 0.3s ease;
 }
 
 .category-item:hover {
-  color: #d4a017;
+  color: #c59d5f;
 }
 
-/* ---------------- PRODUCT LIST SECTION ---------------- */
-.homepage-right {
-  width: 78%;
+.category-item:hover::after {
+  width: 100%;
 }
 
-.section-title {
-  font-size: 22px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-/* ---------------- PRODUCT GRID ---------------- */
+/* product list card */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 25px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
 }
 
+@media screen and (max-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}
+
+/* product card */
+
 .product-card {
-  padding: 15px;
-  border-radius: 8px;
-  background: white;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
+  padding: 16px;
   text-align: center;
-  cursor: pointer;
-  transition: 0.3s ease;
+  border-radius: 6px;
+  transition: all 0.35s ease;
+  background: #fff;
 }
 
 .product-card:hover {
   transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-.product-img {
+.product-card img {
   width: 100%;
-  height: 180px;
+  height: 220px;
   object-fit: contain;
+  margin-bottom: 12px;
 }
 
-.product-name {
-  margin-top: 10px;
-  font-size: 15px;
+.product-card h4 {
+  font-size: 14px;
   font-weight: 500;
+  margin: 5px 0;
 }
+
+.product-card p {
+  font-size: 13px;
+  font-weight: 600;
+  color: #c59d5f;
+}
+
 
 /* ---------------- RESPONSIVE ---------------- */
 @media (max-width: 992px) {
@@ -149,7 +226,7 @@
 .banner-slide {
   position: relative;
   width: 100%;
-  height: 400px; /* adjust height */
+  height: 400px; 
   overflow: hidden;
 }
 
