@@ -1,0 +1,41 @@
+.product-details-page {
+  padding: 40px;
+}
+
+.details-container {
+  display: flex;
+  gap: 60px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.details-image img {
+  width: 420px;
+  border-radius: 8px;
+}
+
+.details-info h2 {
+  font-size: 26px;
+  margin-bottom: 10px;
+}
+
+.sku, .availability {
+  color: #777;
+  margin-bottom: 6px;
+}
+
+.price {
+  color: #b12704;
+  font-size: 24px;
+  margin: 20px 0;
+}
+
+.buy-btn {
+  background-color: #7a4a2e;
+  color: white;
+  padding: 14px 40px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+}

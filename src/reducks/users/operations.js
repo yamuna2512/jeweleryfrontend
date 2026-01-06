@@ -1,114 +1,113 @@
 // src/reducks/users/operations.js
 
-import axios from "axios";
 import API, { LOGIN_USER_KEY } from "../../api";
-import { signUpAction, signUpError, signUserStoreAction,  signInAction, signInError  } from "./actions";
+import {
+  signInAction,
+  signOutAction,
+  signUserStoreAction,
+  signInError,
+} from "./actions";
 
 const api = new API();
 
+/* =====================================
+   LOAD USER FROM LOCAL STORAGE
+===================================== */
 export const fetchUserFromLocalStorage = () => {
   return (dispatch) => {
-    try {
-      const userJSON = localStorage.getItem(LOGIN_USER_KEY);
-      if (!userJSON) return;
-      const user = JSON.parse(userJSON);
-      if (user && user.token) {
-        dispatch(signUserStoreAction(user));
-      }
-    } catch (error) {
-      console.error("fetchUserFromLocalStorage error:", error);
+    const userJSON = localStorage.getItem(LOGIN_USER_KEY);
+    if (!userJSON) return;
+
+    const user = JSON.parse(userJSON);
+    if (user?.token) {
+      dispatch(signUserStoreAction(user));
     }
   };
 };
 
-// export const signUp = (data, onSuccess) => {
-//   return async (dispatch) => {
-//     try {
-//       const payload = {
-//         first_name: data.firstname,
-//         last_name: data.lastname,
-//         email: data.email,
-//         password: data.password,
-//         phone: data.phone || "",
-//       };
-
-//       const response = await api.signUp(payload);
-
-//       localStorage.setItem(LOGIN_USER_KEY, JSON.stringify(response));
-
-//       dispatch(signUpAction(response));
-
-//       if (onSuccess) onSuccess();
-//     } catch (error) {
-//       console.error("Signup failed:", error);
-//       dispatch(signUpError(error.response?.data || { message: "Signup failed" }));
-//     }
-//   };
-// };
-
-
-
+/* =====================================
+   SIGN UP
+===================================== */
 export const signUp = (userData, callback) => {
   return async (dispatch) => {
     try {
-      console.log("SENDING DATA TO BACKEND:", userData);
+      const res = await api.signUp(userData);
 
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/users/signup/",
-        userData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      // The backend returns: {id, first_name, last_name, email, token, token_expires}
+      const user = {
+        id: res.id,
+        email: res.email,
+        first_name: res.first_name,
+        token: res.token,
+      };
 
-      console.log("SIGNUP RESPONSE:", response.data);
+      // Save in localStorage
+      localStorage.setItem(LOGIN_USER_KEY, JSON.stringify(user));
+
+      // Update Redux store
+      dispatch(signInAction(user));
 
       if (callback) callback();
-
     } catch (error) {
-      console.error(
-        "SIGNUP ERROR:",
-        error.response ? error.response.data : error
+      console.error("SIGNUP ERROR:", error.response?.data || error);
+
+      dispatch(
+        signInError({
+          email: "Signup failed",
+          password: "Signup failed",
+        })
       );
-      alert("Signup failed. Check console.");
     }
   };
 };
 
-
-export const signIn = (loginData, callback) => {
+/* =====================================
+   SIGN IN
+===================================== */
+export const signIn = (email, password, callback) => {
   return async (dispatch) => {
     try {
-      console.log("SENDING LOGIN DATA:", loginData);
+      console.log("SENDING LOGIN DATA:", { email, password });
 
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/users/signin/",
-        loginData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await api.signIn({ email, password });
 
-      console.log("LOGIN SUCCESS:", response.data);
+      // backend response:
+      // { id, first_name, last_name, email, token, token_expires }
 
-      // Save user info
+      const user = {
+        id: res.id,
+        first_name: res.first_name,
+        email: res.email,
+        token: res.token,
+      };
+
       localStorage.setItem(
-        "user",
-        JSON.stringify(response.data.user)
+        LOGIN_USER_KEY,
+        JSON.stringify(user)
       );
+
+      dispatch(signInAction(user));
 
       if (callback) callback();
-
     } catch (error) {
-      console.error(
-        "LOGIN ERROR:",
-        error.response?.data || error
+      console.error("LOGIN ERROR:", error.response?.data || error);
+
+      dispatch(
+        signInError({
+          email: "Invalid email or password",
+          password: "Invalid email or password",
+        })
       );
-      alert("Invalid email or password");
     }
+  };
+};
+
+/* =====================================
+   SIGN OUT
+===================================== */
+export const signOut = () => {
+  return (dispatch) => {
+    localStorage.removeItem(LOGIN_USER_KEY);
+    dispatch(signOutAction());
   };
 };

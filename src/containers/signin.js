@@ -14,12 +14,9 @@ const SignIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    dispatch(
-      signIn({ email, password }, () => {
-        history.push("/"); // redirect after login
-      })
-    );
+dispatch(signIn(email, password, () => {
+  history.push("/");
+}));
   };
 
   return (

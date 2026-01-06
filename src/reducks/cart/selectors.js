@@ -1,29 +1,28 @@
-// src/reducks/cart/selectors.js
-import { createSelector } from "reselect";
+// import { createSelector } from "reselect";
 
-//  Input selector: gets the cart slice from state
-const selectCartState = (state) => state.carts || { results: [], totalPrice: 0, totalCart: 0, totalCartItems: 0 };
+// const cartsSelector = (state) => state.cart;
+// // Selectors for cart
+// export const getCarts = (state) => state.cart;
 
-//  Selector for cart items
-export const getCarts = createSelector(
-  [selectCartState],
-  (cartState) => cartState.results || []
-);
+// export const getCartItems = (state) => state.cart.results;
 
-// Selector for total price
-export const getTotalCartPrice = createSelector(
-  [selectCartState],
-  (cartState) => cartState.totalPrice || 0
-);
+// export const getCartTotal = (state) => state.cart.totalPrice;
 
-// Selector for total number of carts
-export const getTotalCartCount = createSelector(
-  [selectCartState],
-  (cartState) => cartState.totalCart || 0
-);
+// export const getCartCount = (state) => state.cart.totalCartItems;
 
-//  Selector for total number of cart items
-export const getTotalCartItems = createSelector(
-  [selectCartState],
-  (cartState) => cartState.totalCartItems || 0
-);
+// Cart base selector
+const cartSelector = (state) => state.cart || {
+  results: [],
+  totalPrice: 0,
+  totalCart: 0,
+  totalCartItems: 0,
+};
+
+// Selectors
+export const getCarts = (state) => cartSelector(state).results;
+
+export const getCartItems = (state) => cartSelector(state).results;
+
+export const getCartTotal = (state) => cartSelector(state).totalPrice;
+
+export const getCartCount = (state) => cartSelector(state).totalCartItems;

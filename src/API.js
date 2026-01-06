@@ -1,194 +1,136 @@
-// // src/API.js
-// import axios from "axios";
+// src/api.js
+import axios from "axios";
 
-// export const LOGIN_USER_KEY = "JEWEL_STORE_USER";
+export const LOGIN_USER_KEY = "JEWEL_STORE_USER";
 
-// // Your backend base URL
-// let baseURL = "http://127.0.0.1:8000/api"; // <-- update if deployed later
+const api = axios.create({
+  baseURL: "http://127.0.0.1:8000/api",
+  // headers: {
+  //   "Content-Type": "application/json",
+  // },
+});
 
-// // AXIOS INSTANCE
-// const api = axios.create({
-//   baseURL: baseURL,
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-// });
 
-// // REQUEST INTERCEPTOR → inject token automatically
-// api.interceptors.request.use(
-//   (config) => {
-//     if (config.requireToken) {
-//       const user = localStorage.getItem(LOGIN_USER_KEY)
-//         ? JSON.parse(localStorage.getItem(LOGIN_USER_KEY))
-//         : null;
 
-//       if (user && user.token) {
-//         // Your backend uses Token Auth => "Authorization: Token <token>"
-//         config.headers.common["Authorization"] = `Token ${user.token}`;
-//       }
-//     }
-//     return config;
-//   },
-//   (err) => console.error(err)
-// );
+api.interceptors.request.use((config) => {
+  const raw = localStorage.getItem(LOGIN_USER_KEY);
 
-// // RESPONSE INTERCEPTOR
+  if (raw) {
+    const user = JSON.parse(raw);
+    if (user?.token) {
+      config.headers.Authorization = `Token ${user.token}`;
+    }
+  }
+
+  return config;
+});
+
+
+/* ================= RESPONSE INTERCEPTOR ================= */
 // api.interceptors.response.use(
 //   (response) => response.data,
 //   (error) => {
-//     console.log("API Error:", error);
-
 //     if (error?.response?.status === 401) {
 //       localStorage.removeItem(LOGIN_USER_KEY);
+//       console.error("Unauthorized");
 //     }
-
 //     return Promise.reject(error);
 //   }
 // );
 
 // export default class API {
 
-//   /* -----------------------------
-//    *      USER AUTH
-//    * ----------------------------*/
 
-//   // signUp = async (signUpBody) => {
-//   //   const formData = new FormData();
-//   //   for (const key in signUpBody) {
-//   //     formData.append(key, signUpBody[key]);
-//   //   }
-//   //   return api.post("/users/signup/", formData);
-//   // };
-
-// // Signup API
-//   signUp(data) {
-//     return this.client.post("/signup/", data).then((res) => res.data);
-//   }
-
-
-//   signIn = async (signInBody) => {
-//     const formData = new FormData();
-//     for (const key in signInBody) {
-//       formData.append(key, signInBody[key]);
-//     }
-//     return api.post("/users/signin/", formData);
-//   };
-
-//   getUserProfile = () => {
-//     return api.get("/users/profile/", { requireToken: true });
-//   };
-
-
-//   /* -----------------------------
-//    *      CATEGORY / SUBCATEGORY
-//    * ----------------------------*/
-
-//   getCategories = () => {
-//     return api.get("/products/categories/");
-//   };
-
-//   getSubCategories = () => {
-//     return api.get("/products/subcategories/");
-//   };
-
-
-//   /* -----------------------------
-//    *      PRODUCTS
-//    * ----------------------------*/
-
-//   getProducts = (query = {}) => {
-//     return api.get("/products/products/", {
-//       params: query,
-//     });
-//   };
-
-//   getProductDetail = (productId) => {
-//     return api.get(`/products/products/${productId}/`);
-//   };
-
-
-//   /* -----------------------------
-//    *      CART
-//    * ----------------------------*/
-
-//   getCartItems = () => {
-//     return api.get("/products/cart/", {
-//       requireToken: true,
-//     });
-//   };
-
-//   addToCart = (body) => {
-//     const formData = new FormData();
-//     for (const key in body) {
-//       formData.append(key, body[key]);
-//     }
-//     return api.post("/products/cart/add/", formData, {
-//       requireToken: true,
-//     });
-//   };
-
-//   removeCartItem = (cartItemId) => {
-//     return api.delete(`/products/cart/remove/${cartItemId}/`, {
-//       requireToken: true,
-//     });
-//   };
-
-
-//   /* -----------------------------
-//    *      WISHLIST
-//    * ----------------------------*/
-
-//   getWishlist = () => {
-//     return api.get("/products/wishlist/", {
-//       requireToken: true,
-//     });
-//   };
-
-//   addToWishlist = (body) => {
-//     const formData = new FormData();
-//     for (const key in body) {
-//       formData.append(key, body[key]);
-//     }
-//     return api.post("/products/wishlist/add/", formData, {
-//       requireToken: true,
-//     });
-//   };
-// }
-
-
-// src/api/index.js
-// src/api/index.js
-import axios from "axios";
-
-export const LOGIN_USER_KEY = "LOGIN_USER_KEY";
+api.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    if (error?.response?.status === 401) {
+      console.error("Unauthorized");
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default class API {
-  constructor() {
-    this.client = axios.create({
-      baseURL: "http://localhost:8000/api", // matches Django backend
-      headers: {
-        "Content-Type": "application/json",
-      },
+  /* ---------- SIGN IN ---------- */
+  signIn = async ({ email, password }) => {
+  const res = await api.post("/users/signin/", {
+    email,
+    password,
+  });
+
+  localStorage.setItem(
+    LOGIN_USER_KEY,
+    JSON.stringify({
+      id: res.id,
+      email: res.email,
+      first_name: res.first_name,
+      token: res.token,
+    })
+  );
+
+  return res;
+};
+
+// signIn = async ({ email, password }) => {
+//   const formData = new FormData();
+//   formData.append("email", email);
+//   formData.append("password", password);
+
+//   const res = await api.post("/users/signin/", formData);
+
+//   return res;
+// };
+  /* ---------- SIGN UP ---------- */
+  signUp = async (data) => {
+    return api.post("/users/signup/", data);
+  };
+
+/* ---------- PROFILE ---------- */
+  getUserProfile = () =>
+    api.get("/users/profile/", { requireToken: true });
+
+
+
+
+  /* ---------- CATEGORY ---------- */
+  getCategories = () => api.get("/products/categories/");
+  getSubCategories = () => api.get("/products/subcategories/");
+
+  /* ---------- PRODUCTS ---------- */
+  getProducts = (params = {}) =>
+    api.get("/products/products/", { params });
+
+  getProductDetail = (id) =>
+    api.get(`/products/products/${id}/`);
+
+  /* ---------- CART ---------- */
+  getCartItems = () =>
+    api.get("/products/cart/", { requireToken: true });
+
+  addToCart = (data) =>
+    api.post("/products/cart/add/", data, { requireToken: true });
+
+  removeCartItem = (id) =>
+    api.delete(`/products/cart/remove/${id}/`, {
+      requireToken: true,
     });
-  }
+/* ---------- WISHLIST ---------- */
 
-  signUp(data) {
-    return this.client.post("/signup/", data).then(res => res.data);
-  }
+// GET wishlist
+  getWishlist = async () => {
+    return api.get("/products/wishlist/");
+  };
 
-  signIn(data) {
-    return this.client.post("/signin/", data).then(res => res.data);
-  }
+  // ADD product to wishlist
+  addToWishlist = async (productId) => {
+    return api.post("/products/wishlist/add/", {
+      product_id: productId, // backend expects product_id
+    });
+  };
 
-  fetchProducts() {
-    return this.client.get("/products/").then((res) => res.data);
-  }
-
-  fetchCategories() {
-    return this.client.get("/categories/").then((res) => res.data);
-  }
-
-  fetchWishlist() {
-    return this.client.get("/wishlist/").then((res) => res.data);
-  }
+  // REMOVE product from wishlist
+  removeWishlist = async (wishlistId) => {
+    return api.delete(`/products/wishlist/remove/${wishlistId}/`);
+  };
 }

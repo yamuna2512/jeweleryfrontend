@@ -20,63 +20,60 @@
 }
 
 .category-sidebar {
-  padding: 20px 10px;
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  border: 1px solid #e5e5e5;
+  padding: 15px;
 }
 
 .side-title {
-  font-family: "Playfair Display", serif;
-  font-size: 18px;
-  margin-bottom: 18px;
-  color: #222;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
 .category-list {
   list-style: none;
   padding: 0;
-  margin: 0;
 }
 
 .category-item {
-  font-size: 14px;
-  margin-bottom: 12px;
+  padding: 10px;
   cursor: pointer;
   position: relative;
-  padding-left: 6px;
-  transition: all 0.3s ease;
 }
 
+
+
+ 
 /* Hover underline */
-.category-item::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 0%;
-  height: 2px;
-  background-color: #c59d5f;
-  transition: width 0.3s ease;
-}
-
 .category-item:hover {
   color: #c59d5f;
 }
 
-.category-item:hover::after {
-  width: 100%;
+.subcategory-list {
+  list-style: none;
+  padding-left: 12px;
+  margin-top: 8px;
+  border-left: 2px solid #c59d5f;
+}
+
+.subcategory-item {
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+.subcategory-item:hover {
+  font-weight: 600;
 }
 
 /* Active category */
-.category-item.active {
+/* .category-item.active {
   font-weight: 600;
   color: #c59d5f;
 }
 
 .category-item.active::after {
   width: 100%;
-}
+} */
 
 /* Responsive for mobile */
 @media screen and (max-width: 768px) {
@@ -89,45 +86,12 @@
   }
 }
 
-
-/* CATEGORY SIDEBAR */
-.side-title {
-  font-family: "Playfair Display", serif;
-  font-size: 18px;
-  margin-bottom: 18px;
+@media (max-width: 768px) {
+  .subcategory-list {
+    margin-left: 10px;
+  }
 }
 
-.category-list {
-  list-style: none;
-  padding: 0;
-}
-
-.category-item {
-  font-size: 14px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.category-item::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 0%;
-  height: 2px;
-  background-color: #c59d5f;
-  transition: width 0.3s ease;
-}
-
-.category-item:hover {
-  color: #c59d5f;
-}
-
-.category-item:hover::after {
-  width: 100%;
-}
 
 /* product list card */
 .product-grid {
@@ -186,6 +150,82 @@
 }
 
 
+.image-wrapper {
+  position: relative;
+}
+
+.product-card img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+}
+
+.wishlist-heart {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.wishlist-icon.active {
+  color: red;
+}
+
+
+.product-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 250px; /* or adjust */
+  overflow: hidden;
+}
+
+.product-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* Banner wrapper */
+.homepage-banner {
+  width: 100%;
+}
+
+/* Banner container */
+.banner-slide {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  overflow: hidden;
+}
+
+/* Banner image */
+.banner-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* fills full width */
+  object-position: center;
+  display: block;
+}
+
+/* Banner text */
+.banner-text {
+  position: absolute;
+  top: 50%;
+  right: 60px;
+  transform: translateY(-50%);
+  color: white;
+  text-align: right;
+  font-size: 36px;
+  font-weight: 600;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
+}
+
+
+
+
 /* ---------------- RESPONSIVE ---------------- */
 @media (max-width: 992px) {
   .homepage-content {
@@ -201,9 +241,9 @@
     width: 100%;
   }
 
-  .product-grid {
+  /* .product-grid {
     grid-template-columns: repeat(3, 1fr);
-  }
+  } */
 }
 
 @media (max-width: 768px) {
@@ -223,27 +263,5 @@
   }
 }
 
-.banner-slide {
-  position: relative;
-  width: 100%;
-  height: 400px; 
-  overflow: hidden;
-}
 
-.banner-slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.banner-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  text-align: center;
-  font-size: 28px;
-  font-weight: 600;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
-}
+  

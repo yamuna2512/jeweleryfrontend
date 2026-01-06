@@ -1,6 +1,8 @@
 const initialState = {
   user: {
     id: null,
+    first_name: "",
+    last_name: "",
     email: "",
     token: "",
     errors: {
@@ -9,6 +11,7 @@ const initialState = {
     },
   },
 
+  
   categories: {
     list: [],
   },
