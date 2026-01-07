@@ -6,6 +6,7 @@ import { FaHeart } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleWishlist } from "../../reducks/wishlist/operations";
 // import { getWishlist } from "../../reducks/wishlist/selectors";
+import { isUserSignedIn } from "../../reducks/users/selectors";
 
 const ProductCard = ({ product }) => {
   const history = useHistory();
@@ -22,14 +23,22 @@ const ProductCard = ({ product }) => {
 
   const dispatch = useDispatch();
   const wishlist = useSelector((state) => state.wishlist.list);
+  const isSignedIn = useSelector(isUserSignedIn);
 
   const isWishlisted = wishlist.some(
-    (item) => item.product === product.id
+    (item) => item.product.id === product.id
   );
 
  const handleWishlist = (e) => {
-       e.stopPropagation();
        e.preventDefault();
+       e.stopPropagation();
+
+       if (!isSignedIn) {
+    history.push("/sign-in");
+    return;
+  }
+
+      
        dispatch(toggleWishlist(product.id));
   };
 
